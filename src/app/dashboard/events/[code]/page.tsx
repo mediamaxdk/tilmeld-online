@@ -19,7 +19,13 @@ import {
 } from "@/components/ui/table";
 import EventQRCode from './components/EventQRCode';
 
-export default function EventDetailsPage({ params }: { params: { code: string } }) {
+interface PageProps {
+  params: {
+    code: string;
+  };
+}
+
+export default function EventDetailsPage({ params }: PageProps) {
   const { user } = useAuth();
   const router = useRouter();
   const [event, setEvent] = useState<Event | null>(null);
