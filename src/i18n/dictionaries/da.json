@@ -1,0 +1,45 @@
+{
+  "common": {
+    "loading": "Indlæser...",
+    "error": "Der opstod en fejl",
+    "notFound": "Ikke fundet"
+  },
+  "navigation": {
+    "events": "Begivenheder",
+    "booking": "Booking",
+    "donations": "Donationer",
+    "dashboard": "Dashboard",
+    "login": "Log ind",
+    "logout": "Log ud"
+  },
+  "hero": {
+    "welcome": "Velkommen til Tilmeld.Online!",
+    "subtitle": "Nem tilmelding til arrangementer og events",
+    "findEvent": "Find begivenhed",
+    "lookingUp": "Søger efter begivenhed...",
+    "enterCode": "Indtast begivenhedskode",
+    "errors": {
+      "notFound": "Begivenhed ikke fundet",
+      "notActive": "Denne begivenhed er ikke aktiv",
+      "lookup": "Fejl ved opslag af begivenhed"
+    }
+  },
+  "event": {
+    "details": "Begivenhedsdetaljer",
+    "code": "Kode",
+    "name": "Navn",
+    "venue": "Sted",
+    "start": "Start",
+    "end": "Slut",
+    "status": "Status",
+    "guestList": "Gæsteliste",
+    "register": "Tilmeld dig denne begivenhed",
+    "registering": "Tilmelder...",
+    "registerButton": "Tilmeld dig begivenheden",
+    "table": {
+      "name": "Navn",
+      "email": "Email",
+      "registeredAt": "Tilmeldt"
+    }
+  }
+} 

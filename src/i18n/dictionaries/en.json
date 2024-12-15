@@ -1,0 +1,45 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "notFound": "Not found"
+  },
+  "navigation": {
+    "events": "Events",
+    "booking": "Booking",
+    "donations": "Donations",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "hero": {
+    "welcome": "Welcome to Tilmeld.Online!",
+    "subtitle": "Easy registration for events",
+    "findEvent": "Find Event",
+    "lookingUp": "Looking up event...",
+    "enterCode": "Enter event code",
+    "errors": {
+      "notFound": "Event not found",
+      "notActive": "This event is not currently active",
+      "lookup": "Error looking up event"
+    }
+  },
+  "event": {
+    "details": "Event Details",
+    "code": "Code",
+    "name": "Name",
+    "venue": "Venue",
+    "start": "Start",
+    "end": "End",
+    "status": "Status",
+    "guestList": "Guest List",
+    "register": "Register for this event",
+    "registering": "Registering...",
+    "registerButton": "Register for Event",
+    "table": {
+      "name": "Name",
+      "email": "Email",
+      "registeredAt": "Registered At"
+    }
+  }
+} 
