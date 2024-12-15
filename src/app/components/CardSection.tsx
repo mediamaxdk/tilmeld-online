@@ -1,39 +1,46 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import Link from 'next/link';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export default function CardSection() {
-  const cards = [
-    {
-      title: "Feature One",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    },
-    {
-      title: "Feature Two",
-      description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-    },
-    {
-      title: "Feature Three",
-      description: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
-    }
-  ]
-
   return (
-    <section className="py-16">
+    <section className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-center">Our Features</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cards.map((card, index) => (
-            <Card key={index}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Link href="/events">
+            <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle>{card.title}</CardTitle>
+                <CardTitle>Events</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription>{card.description}</CardDescription>
+                <p>Create and manage events for your organization. Perfect for conferences, meetups, workshops, and social gatherings. Let attendees easily register with a simple code.</p>
               </CardContent>
             </Card>
-          ))}
+          </Link>
+
+          <Link href="/booking">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle>Booking</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>Streamline your appointment scheduling. Ideal for professionals like barbers, tattoo artists, and consultants. Let clients book their preferred time slots effortlessly.</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/donations">
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle>Donations</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>Support charitable causes and fundraising campaigns. Create donation pages for your projects and let supporters contribute easily to your cause.</p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
