@@ -22,7 +22,6 @@ import EventQRCode from './components/EventQRCode';
 
 type Props = {
   params: Promise<{ code: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export default function EventDetailsPage({ params }: Props) {
