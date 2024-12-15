@@ -7,6 +7,7 @@ import { Event } from '@/types/event';
 import { Guest } from '@/types/guest';
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import { use } from 'react';
 import Header from "@/app/components/Header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
@@ -19,13 +20,13 @@ import {
 } from "@/components/ui/table";
 import EventQRCode from './components/EventQRCode';
 
-interface PageProps {
-  params: {
-    code: string;
-  };
-}
+type Props = {
+  params: Promise<{ code: string }>;
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
-export default function EventDetailsPage({ params }: PageProps) {
+export default function EventDetailsPage({ params }: Props) {
+  const resolvedParams = use(params);
   const { user } = useAuth();
   const router = useRouter();
   const [event, setEvent] = useState<Event | null>(null);
@@ -40,7 +41,7 @@ export default function EventDetailsPage({ params }: PageProps) {
 
     const fetchEventAndGuests = async () => {
       try {
-        const eventRef = doc(db, 'events', params.code);
+        const eventRef = doc(db, 'events', resolvedParams.code);
         const eventDoc = await getDoc(eventRef);
 
         if (!eventDoc.exists() || eventDoc.data().owner !== user.uid) {
@@ -50,8 +51,7 @@ export default function EventDetailsPage({ params }: PageProps) {
 
         setEvent({ id: eventDoc.id, ...eventDoc.data() } as Event);
 
-        // Subscribe to guests collection
-        const guestsQuery = query(collection(db, 'events', params.code, 'guests'));
+        const guestsQuery = query(collection(db, 'events', resolvedParams.code, 'guests'));
         const unsubscribe = onSnapshot(guestsQuery, (snapshot) => {
           const guestsList = snapshot.docs.map(doc => ({
             id: doc.id,
@@ -70,7 +70,7 @@ export default function EventDetailsPage({ params }: PageProps) {
     };
 
     fetchEventAndGuests();
-  }, [params.code, user, router]);
+  }, [resolvedParams.code, user, router]);
 
   if (loading || !event) {
     return <div>Loading...</div>;

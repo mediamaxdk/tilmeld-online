@@ -14,7 +14,7 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const { register } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -23,7 +23,7 @@ export default function SignUpPage() {
     setLoading(true);
     
     try {
-      await signUp(email, password);
+      await register(email, password);
       router.push('/');
     } catch (error) {
       if (error instanceof FirebaseError) {

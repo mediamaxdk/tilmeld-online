@@ -5,18 +5,24 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Event } from '@/types/event';
 import { notFound } from 'next/navigation';
+import { use } from 'react';
 import Header from '@/app/components/Header';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import GuestForm from './components/GuestForm';
 
-export default function EventPage({ params }: { params: { code: string } }) {
+type Props = {
+  params: Promise<{ code: string }>;
+};
+
+export default function EventPage({ params }: Props) {
+  const resolvedParams = use(params);
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const eventRef = doc(db, 'events', params.code.toUpperCase());
+        const eventRef = doc(db, 'events', resolvedParams.code.toUpperCase());
         const eventDoc = await getDoc(eventRef);
 
         if (!eventDoc.exists() || eventDoc.data().status !== 'active') {
@@ -34,7 +40,7 @@ export default function EventPage({ params }: { params: { code: string } }) {
     };
 
     fetchEvent();
-  }, [params.code]);
+  }, [resolvedParams.code]);
 
   if (loading) {
     return <div>Loading...</div>;
