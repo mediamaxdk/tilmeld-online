@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase';
 import { Event } from '@/types/event';
@@ -81,14 +81,8 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
     
     try {
       const eventCode = await generateUniqueEventCode();
-      let imageUrl = '';
-
-      if (selectedImage) {
-        const imageRef = ref(storage, `events/${eventCode}/${selectedImage.name}`);
-        await uploadBytes(imageRef, selectedImage);
-        imageUrl = await getDownloadURL(imageRef);
-      }
       
+      // First create the event document without the image
       const newEvent: Omit<Event, 'id'> = {
         ...formData,
         status: 'draft',
@@ -96,10 +90,24 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
         code: eventCode,
         createdAt: new Date(),
         updatedAt: new Date(),
-        imageUrl: imageUrl || undefined,
       };
 
+      // Create the event document first
       await setDoc(doc(db, 'events', eventCode), newEvent);
+
+      // Then handle image upload if there is one
+      let imageUrl = '';
+      if (selectedImage) {
+        const imageRef = ref(storage, `events/${eventCode}/${selectedImage.name}`);
+        await uploadBytes(imageRef, selectedImage);
+        imageUrl = await getDownloadURL(imageRef);
+        
+        // Update the event document with the image URL
+        await updateDoc(doc(db, 'events', eventCode), {
+          imageUrl,
+          updatedAt: new Date()
+        });
+      }
       
       // Reset form with new default dates
       const newDefaultDates = getDefaultDates();
