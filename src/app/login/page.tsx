@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useLanguage } from '@/hooks/useLanguage';
+import pagesContent from '@/app/content/pages';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -14,6 +16,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+  const lang = useLanguage();
+  const t = pagesContent[lang as keyof typeof pagesContent].login;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +25,7 @@ export default function LoginPage() {
       await login(email, password);
       router.push("/dashboard");
     } catch {
-      setError("Invalid login credentials");
+      setError(t.errors.invalidCredentials);
     }
   };
 
@@ -29,7 +33,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Sign in to your account</CardTitle>
+          <CardTitle>{t.title}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -38,7 +42,7 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="email">{t.emailPlaceholder}</Label>
               <Input
                 id="email"
                 type="email"
@@ -49,7 +53,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t.passwordPlaceholder}</Label>
               <Input
                 id="password"
                 type="password"
@@ -60,7 +64,7 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full">
-              Sign in
+              {t.signIn}
             </Button>
           </form>
         </CardContent>

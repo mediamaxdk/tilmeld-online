@@ -8,6 +8,8 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FirebaseError } from 'firebase/app';
+import { useLanguage } from '@/hooks/useLanguage';
+import pagesContent from '@/app/content/pages';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -16,6 +18,8 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const router = useRouter();
+  const lang = useLanguage();
+  const t = pagesContent[lang as keyof typeof pagesContent].signup;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,16 +33,16 @@ export default function SignUpPage() {
       if (error instanceof FirebaseError) {
         switch (error.code) {
           case 'auth/email-already-in-use':
-            setError('This email is already registered');
+            setError(t.errors.emailInUse);
             break;
           case 'auth/weak-password':
-            setError('Password should be at least 6 characters');
+            setError(t.errors.weakPassword);
             break;
           case 'auth/invalid-email':
-            setError('Invalid email address');
+            setError(t.errors.invalidEmail);
             break;
           default:
-            setError('Failed to create an account');
+            setError(t.errors.generic);
         }
       }
       console.error(error);
@@ -51,14 +55,14 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+          <CardTitle>{t.title}</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && <p className="text-sm text-destructive">{error}</p>}
             <Input
               type="email"
-              placeholder="Email"
+              placeholder={t.emailPlaceholder}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={loading}
@@ -66,7 +70,7 @@ export default function SignUpPage() {
             />
             <Input
               type="password"
-              placeholder="Password"
+              placeholder={t.passwordPlaceholder}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
@@ -76,10 +80,10 @@ export default function SignUpPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating Account...' : 'Sign Up'}
+              {loading ? t.loading : t.signUp}
             </Button>
             <Link href="/login" className="text-sm text-muted-foreground hover:underline">
-              Already have an account? Login
+              {t.loginLink}
             </Link>
           </CardFooter>
         </form>

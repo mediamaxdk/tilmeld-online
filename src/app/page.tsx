@@ -2,6 +2,7 @@ import Hero from '@/app/components/Hero';
 import PublicEvents from '@/app/components/PublicEvents';
 import Header from '@/app/components/Header';
 import Footer from '@/app/components/Footer';
+import CardSection from './components/CardSection';
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <main className="flex-grow">
         <Hero />
         <PublicEvents />
+        <CardSection />
       </main>
       <Footer />
     </div>
