@@ -9,6 +9,9 @@ import { use } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import GuestForm from './components/GuestForm';
 import Image from 'next/image';
+import InfoIcon from '/circle-info-thin.svg';
+import CalendarIcon from '/calendar-days-thin.svg';
+import LocationIcon from '/location-dot-sharp-thin.svg';
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -72,12 +75,13 @@ export default function EventPage({ params }: Props) {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-8">
           {event.imageUrl && (
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden">
+            <div className="relative w-full rounded-lg overflow-hidden">
               <Image
                 src={event.imageUrl}
                 alt={event.name}
-                fill
-                className="object-cover"
+                width={800}
+                height={400}
+                className="w-full h-auto"
                 priority
               />
             </div>
@@ -87,31 +91,50 @@ export default function EventPage({ params }: Props) {
             <CardHeader>
               <CardTitle className="text-3xl">{event.name}</CardTitle>
               {event.description && (
-                <p className="mt-2 text-gray-600">{event.description}</p>
+                <div className="mt-2 text-gray-600 flex gap-2">
+                  <Image 
+                    src={InfoIcon} 
+                    alt="Info" 
+                    width={20} 
+                    height={20} 
+                    className="flex-shrink-0 mt-1" 
+                  />
+                  <p>{event.description}</p>
+                </div>
               )}
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-semibold">Lokation</h3>
-                <p>{event.venue}</p>
+              <div className="flex gap-2">
+                <Image 
+                  src={LocationIcon} 
+                  alt="Location" 
+                  width={20} 
+                  height={20} 
+                  className="flex-shrink-0 mt-1" 
+                />
+                <div>
+                  <h3 className="font-semibold">Lokation</h3>
+                  <p>{event.venue}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">Dato & Tidspunkt</h3>
-                <p>Starter: {event.startDate} kl. {event.startTime}</p>
-                <p>Slutter: {event.endDate} kl. {event.endTime}</p>
+              <div className="flex gap-2">
+                <Image 
+                  src={CalendarIcon} 
+                  alt="Calendar" 
+                  width={20} 
+                  height={20} 
+                  className="flex-shrink-0 mt-1" 
+                />
+                <div>
+                  <h3 className="font-semibold">Dato & Tidspunkt</h3>
+                  <p>Starter: {event.startDate} kl. {event.startTime}</p>
+                  <p>Slutter: {event.endDate} kl. {event.endTime}</p>
+                </div>
               </div>
               {hasValidPrice && (
                 <div>
                   <h3 className="font-semibold">Pris</h3>
                   <p>{event.price === 0 ? 'Gratis' : `${event.price} DKK`}</p>
-                </div>
-              )}
-              {hasValidSeats && (
-                <div>
-                  <h3 className="font-semibold">Ledige pladser</h3>
-                  <p className={isSoldOut ? 'text-red-500 font-semibold' : ''}>
-                    {isSoldOut ? 'Udsolgt' : `${availableSeats} af ${event.seats} pladser tilbage`}
-                  </p>
                 </div>
               )}
             </CardContent>
