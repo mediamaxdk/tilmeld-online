@@ -13,4 +13,9 @@ export interface Event {
   owner: string;
   createdAt?: Date;
   updatedAt?: Date;
+  backgroundColor?: string;
+  description?: string;
+  price: number;
+  seats: number;
+  imageUrl?: string;
 } 
