@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Tilmeld.online",
   description: "Nem tilmelding til arrangementer og events",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
