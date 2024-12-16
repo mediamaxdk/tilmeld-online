@@ -9,9 +9,9 @@ import { use } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import GuestForm from './components/GuestForm';
 import Image from 'next/image';
-import InfoIcon from '/circle-info-thin.svg';
-import CalendarIcon from '/calendar-days-thin.svg';
-import LocationIcon from '/location-dot-sharp-thin.svg';
+import LocationIcon from '../../../../public/location-dot-sharp-thin.svg';
+import CalendarIcon from '../../../../public/calendar-days-thin.svg';
+import InfoIcon from '../../../../public/circle-info-thin.svg';
 
 type Props = {
   params: Promise<{ code: string }>;
