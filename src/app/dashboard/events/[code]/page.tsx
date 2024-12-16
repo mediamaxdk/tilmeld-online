@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { doc, getDoc, collection, query, onSnapshot, deleteDoc, getDocs } from 'firebase/firestore';
-import { db, storage } from '@/lib/firebase';
+import { doc, getDoc, collection, query, onSnapshot } from 'firebase/firestore';
+import { db} from '@/lib/firebase';
 import { Event } from '@/types/event';
 import { Guest } from '@/types/guest';
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,9 +10,6 @@ import { useRouter } from "next/navigation";
 import { use } from 'react';
 import Header from "@/app/components/Header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { ref, deleteObject, listAll } from 'firebase/storage';
 import {
   Table,
   TableBody,
@@ -23,7 +20,6 @@ import {
 } from "@/components/ui/table";
 import EventQRCode from './components/EventQRCode';
 import Image from 'next/image';
-import PrintIcon from '../../../../../../public/print-light.svg';   
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import pagesContent from '@/app/content/pages';
@@ -86,42 +82,6 @@ export default function EventDetailsPage({ params }: Props) {
   if (loading || !event) {
     return <div>{content.loading}</div>;
   }
-
-  const handleDelete = async () => {
-    if (!window.confirm(content.confirmDelete)) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      // Delete all guest documents
-      const guestsQuery = query(collection(db, 'events', event.code, 'guests'));
-      const guestsSnapshot = await getDocs(guestsQuery);
-      const deleteGuestsPromises = guestsSnapshot.docs.map(doc => 
-        deleteDoc(doc.ref)
-      );
-      await Promise.all(deleteGuestsPromises);
-
-      // Delete all files in the event's storage folder
-      const storageRef = ref(storage, `events/${event.code}`);
-      const filesList = await listAll(storageRef);
-      const deleteFilesPromises = filesList.items.map(item => 
-        deleteObject(item)
-      );
-      await Promise.all(deleteFilesPromises);
-
-      // Delete the event document
-      await deleteDoc(doc(db, 'events', event.code));
-
-      router.push('/dashboard');
-    } catch (error) {
-      console.error('Error deleting event:', error);
-      alert(content.deleteError);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
