@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '@/lib/firebase';
 import { Event } from '@/types/event';
@@ -91,9 +91,10 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
         ...formData,
         status: 'draft',
         owner: userId,
+        userId: userId,
         code: eventCode,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
       };
 
       // Create the event document first

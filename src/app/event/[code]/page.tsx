@@ -64,7 +64,7 @@ export default function EventPage({ params }: Props) {
 
   const hasValidSeats = typeof event.seats === 'number' && !isNaN(event.seats);
   const hasValidPrice = typeof event.price === 'number' && !isNaN(event.price);
-  const availableSeats = hasValidSeats ? event.seats - guestCount : 0;
+  const availableSeats = hasValidSeats && event.seats ? event.seats - guestCount : 0;
   const isSoldOut = hasValidSeats && availableSeats <= 0;
 
   return (

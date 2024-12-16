@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Event } from '@/types/event';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function PublicEvents() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -56,19 +55,29 @@ export default function PublicEvents() {
         <h2 className="text-3xl font-bold mb-8">Kommende arrangementer</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {events.map((event) => (
-            <div key={event.id} className="flex flex-col h-full">
-              <Link href={`/events/${event.id}`}>
-                <Image
-                  src={event.imageUrl}
-                  alt={event.title}
-                  width={300}
-                  height={200}
-                  className="w-full h-40 object-cover mb-4"
-                />
-              </Link>
-              <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-              <p className="text-gray-600">{event.description}</p>
-            </div>
+            <Link key={event.id} href={`/event/${event.code}`} className="group">
+              <div className="relative aspect-video rounded-lg overflow-hidden">
+                {event.imageUrl ? (
+                  <Image
+                    src={event.imageUrl}
+                    alt={event.name}
+                    fill
+                    className="object-cover transition-transform group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-100" />
+                )}
+                <div className="absolute inset-0 bg-black/40 p-4 flex flex-col justify-end">
+                  <h3 className="text-white font-semibold text-lg">{event.name}</h3>
+                  <p className="text-white/90 text-sm">{event.venue}</p>
+                </div>
+              </div>
+              <div className="mt-2">
+                <p className="text-gray-600">
+                  {event.startDate} kl. {event.startTime}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
