@@ -1,7 +1,7 @@
-import Header from './components/Header'
-import Hero from './components/Hero'
-import CardSection from './components/CardSection'
-import Footer from './components/Footer' 
+import Hero from '@/app/components/Hero';
+import PublicEvents from '@/app/components/PublicEvents';
+import Header from '@/app/components/Header';
+import Footer from '@/app/components/Footer';
 
 export default function Home() {
   return (
@@ -9,10 +9,10 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         <Hero />
-        <CardSection />
+        <PublicEvents />
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 

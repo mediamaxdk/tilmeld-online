@@ -147,7 +147,12 @@ export default function EventPage({ params }: Props) {
                   <CardTitle>Tilmeld dig dette arrangement</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <GuestForm eventCode={event.code} availableSeats={availableSeats} />
+                  <GuestForm 
+                    eventCode={event.code} 
+                    availableSeats={availableSeats}
+                    successText={event.successText}
+                    paymentMessage={event.paymentMessage}
+                  />
                 </CardContent>
               </Card>
             ) : (

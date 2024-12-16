@@ -11,9 +11,11 @@ import { Label } from "@/components/ui/label";
 interface GuestFormProps {
   eventCode: string;
   availableSeats: number;
+  successText?: string;
+  paymentMessage?: string;
 }
 
-const GuestForm = ({ eventCode, availableSeats }: GuestFormProps) => {
+const GuestForm = ({ eventCode, availableSeats, successText, paymentMessage }: GuestFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -75,7 +77,7 @@ const GuestForm = ({ eventCode, availableSeats }: GuestFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {success && (
-        <p className="text-green-600">Du er nu tilmeldt arrangementet!</p>
+        <p className="text-green-600">{successText || 'Du er nu tilmeldt arrangementet!'}</p>
       )}
       {error && <p className="text-red-500">{error}</p>}
       
@@ -105,6 +107,12 @@ const GuestForm = ({ eventCode, availableSeats }: GuestFormProps) => {
       <Button type="submit" disabled={loading}>
         {loading ? 'Tilmelder...' : 'Tilmeld'}
       </Button>
+
+      {paymentMessage && (
+        <div className="mt-2 text-gray-600">
+          <p>{paymentMessage}</p>
+        </div>
+      )}
     </form>
   );
 };

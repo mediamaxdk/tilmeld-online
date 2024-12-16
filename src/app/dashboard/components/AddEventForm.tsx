@@ -16,6 +16,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddEventFormProps {
   userId: string;
@@ -55,6 +56,9 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
     description: '',
     price: 0,
     seats: 0,
+    successText: 'Du er nu tilmeldt arrangementet!',
+    paymentMessage: '',
+    public: false,
   });
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -122,6 +126,9 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
         description: '',
         price: 0,
         seats: 0,
+        successText: 'Du er nu tilmeldt arrangementet!',
+        paymentMessage: '',
+        public: false,
       });
       setSelectedImage(null);
       setPreviewUrl(null);
@@ -319,6 +326,42 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
                   required
                   disabled={loading}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="successText">Bekræftelses besked</Label>
+                <Input
+                  id="successText"
+                  value={formData.successText}
+                  onChange={(e) => setFormData({ ...formData, successText: e.target.value })}
+                  placeholder="Besked der vises efter tilmelding"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="paymentMessage">Betalings besked (valgfri)</Label>
+                <Input
+                  id="paymentMessage"
+                  value={formData.paymentMessage}
+                  onChange={(e) => setFormData({ ...formData, paymentMessage: e.target.value })}
+                  placeholder="F.eks. betalingsinstruktioner"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="public"
+                  checked={formData.public}
+                  onCheckedChange={(checked) => 
+                    setFormData({ ...formData, public: checked as boolean })
+                  }
+                  disabled={loading}
+                />
+                <Label htmlFor="public" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Gør arrangementet offentligt tilgængeligt
+                </Label>
               </div>
             </div>
             
