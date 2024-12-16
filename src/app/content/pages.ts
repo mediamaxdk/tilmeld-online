@@ -60,7 +60,29 @@ const pagesContent = {
         invalidCredentials: 'Ugyldige loginoplysninger',
         generic: 'Der opstod en fejl. Prøv igen.'
       }
-    }
+    },
+    eventDetails: {
+      loading: 'Indlæser...',
+      confirmDelete: 'Er du sikker på, at du vil slette denne begivenhed? Denne handling kan ikke fortrydes.',
+      deleteError: 'Kunne ikke slette begivenheden. Prøv venligst igen.',
+      eventDetails: 'Begivenhedsdetaljer',
+      eventCode: 'Begivenhedskode',
+      name: 'Navn',
+      description: 'Beskrivelse',
+      noDescription: 'Ingen beskrivelse tilgængelig.',
+      price: 'Pris',
+      availableSeats: 'Ledige pladser',
+      backgroundColor: 'Baggrundsfarve',
+      start: 'Start',
+      end: 'Slut',
+      venue: 'Sted',
+      status: 'Status',
+      eventImage: 'Begivenhedsbillede',
+      guestList: 'Gæsteliste',
+      email: 'Email',
+      registeredAt: 'Registreret den',
+      notAvailable: 'Ikke tilgængelig',
+    },
   },
   en: {
     events: {
@@ -123,7 +145,29 @@ const pagesContent = {
         invalidCredentials: 'Invalid login credentials',
         generic: 'An error occurred. Please try again.'
       }
-    }
+    },
+    eventDetails: {
+      loading: 'Loading...',
+      confirmDelete: 'Are you sure you want to delete this event? This action cannot be undone.',
+      deleteError: 'Failed to delete event. Please try again.',
+      eventDetails: 'Event Details',
+      eventCode: 'Event Code',
+      name: 'Name',
+      description: 'Description',
+      noDescription: 'No description available.',
+      price: 'Price',
+      availableSeats: 'Available Seats',
+      backgroundColor: 'Background Color',
+      start: 'Start',
+      end: 'End',
+      venue: 'Venue',
+      status: 'Status',
+      eventImage: 'Event Image',
+      guestList: 'Guest List',
+      email: 'Email',
+      registeredAt: 'Registered At',
+      notAvailable: 'N/A',
+    },
   }
 };
 

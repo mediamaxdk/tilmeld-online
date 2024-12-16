@@ -23,6 +23,10 @@ import {
 } from "@/components/ui/table";
 import EventQRCode from './components/EventQRCode';
 import Image from 'next/image';
+import PrintIcon from '../../../../../../public/print-light.svg';   
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
+import pagesContent from '@/app/content/pages';
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -35,6 +39,10 @@ export default function EventDetailsPage({ params }: Props) {
   const [event, setEvent] = useState<Event | null>(null);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
+  const [detailsExpanded, setDetailsExpanded] = useState(true);
+  const [guestListExpanded, setGuestListExpanded] = useState(true);
+  const lang = useLanguage();
+  const content = pagesContent[lang as keyof typeof pagesContent].eventDetails;
 
   useEffect(() => {
     if (!user) {
@@ -76,11 +84,11 @@ export default function EventDetailsPage({ params }: Props) {
   }, [resolvedParams.code, user, router]);
 
   if (loading || !event) {
-    return <div>Loading...</div>;
+    return <div>{content.loading}</div>;
   }
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+    if (!window.confirm(content.confirmDelete)) {
       return;
     }
 
@@ -109,7 +117,7 @@ export default function EventDetailsPage({ params }: Props) {
       router.push('/dashboard');
     } catch (error) {
       console.error('Error deleting event:', error);
-      alert('Failed to delete event. Please try again.');
+      alert(content.deleteError);
     } finally {
       setLoading(false);
     }
@@ -122,123 +130,121 @@ export default function EventDetailsPage({ params }: Props) {
         <div className="space-y-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Event Details</CardTitle>
-              {event.status === 'cancelled' && (
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleDelete}
-                  disabled={loading}
-                  className="flex items-center gap-2"
-                >
-                  <Trash2 className="h-4 w-4" />
-                  Delete Event
-                </Button>
-              )}
+              <CardTitle>{content.eventDetails}</CardTitle>
+              <button onClick={() => setDetailsExpanded(!detailsExpanded)}>
+                {detailsExpanded ? <ChevronUp /> : <ChevronDown />}
+              </button>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-8">
-                {/* Event Details */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold">Event Code</h3>
-                    <p className="font-mono">{event.code}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Name</h3>
-                    <p>{event.name}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Description</h3>
-                    <p className="whitespace-pre-wrap">{event.description || 'No description'}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Price</h3>
-                    <p>{event.price} DKK</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Available Seats</h3>
-                    <p>{event.seats}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Background Color</h3>
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-6 h-6 rounded border"
-                        style={{ backgroundColor: event.backgroundColor }}
-                      />
-                      <span className="font-mono">{event.backgroundColor}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Date and Time */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold">Start</h3>
-                    <p>{event.startDate} at {event.startTime}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">End</h3>
-                    <p>{event.endDate} at {event.endTime}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Venue</h3>
-                    <p>{event.venue}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Status</h3>
-                    <p>{event.status}</p>
-                  </div>
-                  {event.imageUrl && (
+            {detailsExpanded && (
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {/* Event Details */}
+                  <div className="space-y-4">
                     <div>
-                      <h3 className="font-semibold mb-2">Event Image</h3>
-                      <div className="relative w-full aspect-video">
-                        <Image
-                          src={event.imageUrl}
-                          alt={event.name}
-                          fill
-                          className="object-cover rounded-lg"
+                      <h3 className="font-semibold">{content.eventCode}</h3>
+                      <p className="font-mono">{event.code}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.name}</h3>
+                      <p>{event.name}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.description}</h3>
+                      <p className="whitespace-pre-wrap">{event.description || content.noDescription}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.price}</h3>
+                      <p>{event.price} DKK</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.availableSeats}</h3>
+                      <p>{event.seats}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.backgroundColor}</h3>
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-6 h-6 rounded border"
+                          style={{ backgroundColor: event.backgroundColor }}
                         />
+                        <span className="font-mono">{event.backgroundColor}</span>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                {/* QR Code */}
-                <div className="flex flex-col items-center justify-center">
-                  <EventQRCode eventCode={event.code} />
+                  {/* Date and Time */}
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold">{content.start}</h3>
+                      <p>{event.startDate} at {event.startTime}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.end}</h3>
+                      <p>{event.endDate} at {event.endTime}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.venue}</h3>
+                      <p>{event.venue}</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">{content.status}</h3>
+                      <p>{event.status}</p>
+                    </div>
+                    {event.imageUrl && (
+                      <div>
+                        <h3 className="font-semibold mb-2">{content.eventImage}</h3>
+                        <div className="relative w-full aspect-video">
+                          <Image
+                            src={event.imageUrl}
+                            alt={event.name}
+                            fill
+                            className="object-cover rounded-lg"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* QR Code */}
+                  <div className="flex flex-col items-center justify-center">
+                    <EventQRCode eventCode={event.code} />
+                  </div>
                 </div>
-              </div>
-            </CardContent>
+              </CardContent>
+            )}
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Guest List ({guests.length})</CardTitle>
+            <CardHeader className="flex justify-between items-center">
+              <CardTitle>{content.guestList} ({guests.length})</CardTitle>
+              <button onClick={() => setGuestListExpanded(!guestListExpanded)}>
+                {guestListExpanded ? <ChevronUp /> : <ChevronDown />}
+              </button>
             </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Registered At</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {guests.map((guest) => (
-                    <TableRow key={guest.id}>
-                      <TableCell>{guest.name}</TableCell>
-                      <TableCell>{guest.email}</TableCell>
-                      <TableCell>
-                        {guest.createdAt ? new Date(guest.createdAt).toLocaleString() : 'N/A'}
-                      </TableCell>
+            {guestListExpanded && (
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{content.name}</TableHead>
+                      <TableHead>{content.email}</TableHead>
+                      <TableHead>{content.registeredAt}</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
+                  </TableHeader>
+                  <TableBody>
+                    {guests.map((guest) => (
+                      <TableRow key={guest.id}>
+                        <TableCell>{guest.name}</TableCell>
+                        <TableCell>{guest.email}</TableCell>
+                        <TableCell>
+                          {guest.createdAt ? new Date(guest.createdAt).toLocaleString() : content.notAvailable}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            )}
           </Card>
         </div>
       </main>
