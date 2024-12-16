@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { doc, getDoc, collection, query, onSnapshot } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { doc, getDoc, collection, query, onSnapshot, deleteDoc, getDocs } from 'firebase/firestore';
+import { db, storage } from '@/lib/firebase';
 import { Event } from '@/types/event';
 import { Guest } from '@/types/guest';
 import { useAuth } from "@/contexts/AuthContext";
@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import { use } from 'react';
 import Header from "@/app/components/Header";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { ref, deleteObject, listAll } from 'firebase/storage';
 import {
   Table,
   TableBody,
@@ -19,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import EventQRCode from './components/EventQRCode';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{ code: string }>;
@@ -75,14 +79,62 @@ export default function EventDetailsPage({ params }: Props) {
     return <div>Loading...</div>;
   }
 
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      // Delete all guest documents
+      const guestsQuery = query(collection(db, 'events', event.code, 'guests'));
+      const guestsSnapshot = await getDocs(guestsQuery);
+      const deleteGuestsPromises = guestsSnapshot.docs.map(doc => 
+        deleteDoc(doc.ref)
+      );
+      await Promise.all(deleteGuestsPromises);
+
+      // Delete all files in the event's storage folder
+      const storageRef = ref(storage, `events/${event.code}`);
+      const filesList = await listAll(storageRef);
+      const deleteFilesPromises = filesList.items.map(item => 
+        deleteObject(item)
+      );
+      await Promise.all(deleteFilesPromises);
+
+      // Delete the event document
+      await deleteDoc(doc(db, 'events', event.code));
+
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      alert('Failed to delete event. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="space-y-8">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Event Details</CardTitle>
+              {event.status === 'cancelled' && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                  disabled={loading}
+                  className="flex items-center gap-2"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete Event
+                </Button>
+              )}
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-8">
@@ -95,6 +147,28 @@ export default function EventDetailsPage({ params }: Props) {
                   <div>
                     <h3 className="font-semibold">Name</h3>
                     <p>{event.name}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Description</h3>
+                    <p className="whitespace-pre-wrap">{event.description || 'No description'}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Price</h3>
+                    <p>{event.price} DKK</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Available Seats</h3>
+                    <p>{event.seats}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Background Color</h3>
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-6 h-6 rounded border"
+                        style={{ backgroundColor: event.backgroundColor }}
+                      />
+                      <span className="font-mono">{event.backgroundColor}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -116,6 +190,19 @@ export default function EventDetailsPage({ params }: Props) {
                     <h3 className="font-semibold">Status</h3>
                     <p>{event.status}</p>
                   </div>
+                  {event.imageUrl && (
+                    <div>
+                      <h3 className="font-semibold mb-2">Event Image</h3>
+                      <div className="relative w-full aspect-video">
+                        <Image
+                          src={event.imageUrl}
+                          alt={event.name}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* QR Code */}

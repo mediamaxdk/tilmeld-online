@@ -1,6 +1,7 @@
 'use client';
 
 import { QRCodeSVG } from 'qrcode.react';
+import Link from 'next/link';
 
 interface EventQRCodeProps {
   eventCode: string;
@@ -19,9 +20,12 @@ export default function EventQRCode({ eventCode }: EventQRCodeProps) {
           includeMargin
         />
       </div>
-      <p className="text-sm text-gray-500 text-center break-all">
+      <Link 
+        href={`/event/${eventCode}`}
+        className="text-sm text-blue-500 hover:text-blue-700 text-center break-all block transition-colors"
+      >
         {eventUrl}
-      </p>
+      </Link>
     </div>
   );
 } 

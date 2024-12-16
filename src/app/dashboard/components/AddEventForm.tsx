@@ -264,7 +264,7 @@ const AddEventForm = ({ userId }: AddEventFormProps) => {
                 <Input
                   id="seats"
                   type="number"
-                  min="1"
+                  min="0"
                   step="1"
                   value={formData.seats}
                   onChange={(e) => setFormData({ ...formData, seats: parseInt(e.target.value) || 0 })}
